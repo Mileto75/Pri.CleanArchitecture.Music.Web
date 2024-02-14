@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Pri.CleanArchitecture.Music.Core.Entities;
+using Pri.CleanArchitecture.Music.Infrastructure.Data.Seeding;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -22,6 +23,8 @@ namespace Pri.CleanArchitecture.Music.Infrastructure.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Record>().Property(r => r.Price).HasColumnType("money");
+            Seeder.Seed(modelBuilder);
             base.OnModelCreating(modelBuilder);
         }
     }
