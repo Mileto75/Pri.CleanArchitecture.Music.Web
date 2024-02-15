@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using Pri.CleanArchitecture.Music.Core.Interfaces;
 using Pri.CleanArchitecture.Music.Infrastructure.Data;
+using Pri.CleanArchitecture.Music.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 //Add database service
@@ -7,6 +9,7 @@ builder.Services.AddDbContext<ApplicationDbContext>
     (options => options
     .UseSqlServer(builder.Configuration.GetConnectionString("DefaultDb")));
 // Add services to the container.
+builder.Services.AddScoped<IRecordRepository,RecordRepository>();
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();

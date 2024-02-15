@@ -10,18 +10,40 @@ namespace Pri.CleanArchitecture.Music.Core.Services
 {
     public class RecordService : IRecordService
     {
+        private readonly IRecordRepository _recordRepository;
+
+        public RecordService(IRecordRepository recordRepository)
+        {
+            _recordRepository = recordRepository;
+        }
+
         public Task<RecordResultModel> CreateRecordAsync(RecordCreateRequestModel recordCreateRequestModel)
         {
             throw new NotImplementedException();
         }
 
-        public Task<RecordResultModel> GetAllAsync()
+        public async Task<RecordResultModel> GetAllAsync()
         {
-            throw new NotImplementedException();
+            //get the records from the RecordRepository
+            var records = await _recordRepository.GetAllAsync();
+            //check if count > 0
+            var recordResultModel = new RecordResultModel();
+            if (records.Count() > 0) 
+            {
+                recordResultModel.Records = records;
+                recordResultModel.IsSucces = true;
+                return recordResultModel;
+            }
+            recordResultModel.Errors = new List<string> { "No records found!" };
+            return recordResultModel;
         }
 
         public Task<RecordResultModel> GetByIdAsync(int id)
         {
+            //get the record
+            //check if exists
+            //set resultmodel
+            //return resultModel
             throw new NotImplementedException();
         }
 
