@@ -13,6 +13,6 @@ namespace Pri.CleanArchitecture.Music.Core.Interfaces
         Task<IEnumerable<Record>> GetAllAsync();
         Task<Record> GetByIdAsync(int id);
         IQueryable<Record> GetAll();
-        Task<Record> AddAsync(Record toRecord);
+        Task<bool> AddAsync(Record toRecord);
     }
 }

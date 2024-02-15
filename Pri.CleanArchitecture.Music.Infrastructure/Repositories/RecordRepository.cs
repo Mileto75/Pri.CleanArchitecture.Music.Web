@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Pri.CleanArchitecture.Music.Core.Entities;
 using Pri.CleanArchitecture.Music.Core.Interfaces;
 using Pri.CleanArchitecture.Music.Infrastructure.Data;
@@ -13,15 +14,27 @@ namespace Pri.CleanArchitecture.Music.Infrastructure.Repositories
     public class RecordRepository : IRecordRepository
     {
         private readonly ApplicationDbContext _applicationDbContext;
+        private readonly ILogger<RecordRepository> _logger;
 
-        public RecordRepository(ApplicationDbContext applicationDbContext)
+        public RecordRepository(ApplicationDbContext applicationDbContext, ILogger<RecordRepository> logger = null)
         {
             _applicationDbContext = applicationDbContext;
+            _logger = logger;
         }
 
-        public Task<Record> AddAsync(Record toRecord)
+        public async Task<bool> AddAsync(Record toRecord)
         {
-            throw new NotImplementedException();
+            _applicationDbContext.Records.Add(toRecord);
+            try
+            {
+                await _applicationDbContext.SaveChangesAsync();
+                return true;
+            }
+            catch (DbUpdateException dbUpdateException)
+            {
+                _logger.LogError(dbUpdateException.Message);
+                return false;
+            }
         }
 
         public IQueryable<Record> GetAll()
@@ -32,12 +45,20 @@ namespace Pri.CleanArchitecture.Music.Infrastructure.Repositories
 
         public async Task<IEnumerable<Record>> GetAllAsync()
         {
-            return await _applicationDbContext.Records.ToListAsync();
+            return await _applicationDbContext.Records
+                .Include(r => r.Genre)
+                .Include(r => r.Properties)
+                .Include(r => r.Artist)
+                .ToListAsync();
         }
 
-        public Task<Record> GetByIdAsync(int id)
+        public async Task<Record> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _applicationDbContext.Records
+                .Include(r => r.Genre)
+                .Include(r => r.Properties)
+                .Include(r => r.Artist)
+                .FirstOrDefaultAsync(r => r.Id == id);
         }
     }
 }
