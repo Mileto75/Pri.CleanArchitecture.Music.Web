@@ -1,4 +1,5 @@
-﻿using Pri.CleanArchitecture.Music.Core.Interfaces;
+﻿using Pri.CleanArchitecture.Music.Core.Entities;
+using Pri.CleanArchitecture.Music.Core.Interfaces;
 using Pri.CleanArchitecture.Music.Core.Services.Models;
 using System;
 using System.Collections.Generic;
@@ -38,13 +39,20 @@ namespace Pri.CleanArchitecture.Music.Core.Services
             return recordResultModel;
         }
 
-        public Task<RecordResultModel> GetByIdAsync(int id)
+        public async Task<RecordResultModel> GetByIdAsync(int id)
         {
             //get the record
+            var record = await _recordRepository.GetByIdAsync(id);
+            var recordresultModel = new RecordResultModel();
             //check if exists
-            //set resultmodel
-            //return resultModel
-            throw new NotImplementedException();
+            if(record == null)
+            {
+                recordresultModel.Errors = new List<string> { "Record not found!" };
+                return recordresultModel;
+            }
+            recordresultModel.Records = new List<Record> { record };
+            recordresultModel.IsSucces = true;
+            return recordresultModel;
         }
 
         public Task<RecordResultModel> GetRecordsByGenreIdAsync(int genreId)
