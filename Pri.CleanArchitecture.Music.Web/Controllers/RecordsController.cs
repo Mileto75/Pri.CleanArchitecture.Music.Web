@@ -49,7 +49,7 @@ namespace Pri.CleanArchitecture.Music.Web.Controllers
                 return View(recordsDetailViewModel);
             }
             Response.StatusCode = 404;
-            return RedirectToAction("Error",new {messages = result.Errors });
+            return View("Error", result.Errors);
         }
         public IActionResult Error(IEnumerable<string> messages)
         {
