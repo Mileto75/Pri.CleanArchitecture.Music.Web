@@ -37,6 +37,11 @@ namespace Pri.CleanArchitecture.Music.Infrastructure.Repositories
             }
         }
 
+        public Task<bool> DeleteAsync(Record toDelete)
+        {
+            throw new NotImplementedException();
+        }
+
         public IQueryable<Record> GetAll()
         {
             return _applicationDbContext
@@ -59,6 +64,21 @@ namespace Pri.CleanArchitecture.Music.Infrastructure.Repositories
                 .Include(r => r.Properties)
                 .Include(r => r.Artist)
                 .FirstOrDefaultAsync(r => r.Id == id);
+        }
+
+        public Task<bool> GetRecordsByArtistIdAsync(int genreId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> GetRecordsByGenreIdAsync(int genreId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> UpdateAsync(Record toUpdate)
+        {
+            throw new NotImplementedException();
         }
     }
 }
