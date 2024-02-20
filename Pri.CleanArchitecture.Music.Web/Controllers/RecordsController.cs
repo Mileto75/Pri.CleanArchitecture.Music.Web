@@ -32,7 +32,7 @@ namespace Pri.CleanArchitecture.Music.Web.Controllers
                 };
                 return View(recordsIndexViewModel);
             }
-            return RedirectToAction("Error",new { messages = result.Errors });
+            return View("Error",result.Errors);
         }
         public async Task<IActionResult> Detail(int id)
         {
@@ -50,10 +50,6 @@ namespace Pri.CleanArchitecture.Music.Web.Controllers
             }
             Response.StatusCode = 404;
             return View("Error", result.Errors);
-        }
-        public IActionResult Error(IEnumerable<string> messages)
-        {
-            return View(messages);
         }
     }
 }
