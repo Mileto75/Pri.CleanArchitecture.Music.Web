@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Pri.CleanArchitecture.Music.Core.Interfaces
+namespace Pri.CleanArchitecture.Music.Core.Interfaces.Repositories
 {
     public interface IGenreRepository
     {
@@ -14,5 +14,7 @@ namespace Pri.CleanArchitecture.Music.Core.Interfaces
         Task<Genre> GetByIdAsync(int id);
         IQueryable<Genre> GetAll();
         Task<bool> AddAsync(Genre newGenre);
+        Task<bool> UpdateAsync(Genre toUpdate);
+        Task<bool> DeleteAsync(Genre toDelete);
     }
 }

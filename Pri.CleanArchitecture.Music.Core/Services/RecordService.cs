@@ -1,5 +1,6 @@
 ﻿using Pri.CleanArchitecture.Music.Core.Entities;
-using Pri.CleanArchitecture.Music.Core.Interfaces;
+using Pri.CleanArchitecture.Music.Core.Interfaces.Repositories;
+using Pri.CleanArchitecture.Music.Core.Interfaces.Services;
 using Pri.CleanArchitecture.Music.Core.Services.Models;
 using System;
 using System.Collections.Generic;

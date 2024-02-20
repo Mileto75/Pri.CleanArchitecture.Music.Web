@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using Pri.CleanArchitecture.Music.Core.Interfaces;
+using Pri.CleanArchitecture.Music.Core.Interfaces.Repositories;
+using Pri.CleanArchitecture.Music.Core.Interfaces.Services;
 using Pri.CleanArchitecture.Music.Core.Services;
 using Pri.CleanArchitecture.Music.Infrastructure.Data;
 using Pri.CleanArchitecture.Music.Infrastructure.Repositories;

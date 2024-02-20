@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Pri.CleanArchitecture.Music.Core.Interfaces
+namespace Pri.CleanArchitecture.Music.Core.Interfaces.Services
 {
     public interface IRecordService
     {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Pri.CleanArchitecture.Music.Core.Entities;
-using Pri.CleanArchitecture.Music.Core.Interfaces;
+using Pri.CleanArchitecture.Music.Core.Interfaces.Repositories;
 using Pri.CleanArchitecture.Music.Infrastructure.Data;
 using System;
 using System.Collections.Generic;

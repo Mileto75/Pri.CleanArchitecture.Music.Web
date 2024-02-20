@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Pri.CleanArchitecture.Music.Core.Interfaces;
+using Pri.CleanArchitecture.Music.Core.Interfaces.Services;
 using Pri.CleanArchitecture.Music.Web.ViewModels;
 
 namespace Pri.CleanArchitecture.Music.Web.Controllers
