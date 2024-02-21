@@ -28,7 +28,7 @@ namespace Pri.CleanArchitecture.Music.Core.Services
         public async Task<RecordResultModel> CreateRecordAsync(RecordCreateRequestModel recordCreateRequestModel)
         {
             //check if genreId exists
-            if(await _genreRepository.GetAll().AnyAsync(g => g.Id == recordCreateRequestModel.GenreId == false))
+            if(await _genreRepository.GetAll().AnyAsync(g => g.Id == recordCreateRequestModel.GenreId) == false)
             {
                 return new RecordResultModel
                 {
@@ -37,8 +37,8 @@ namespace Pri.CleanArchitecture.Music.Core.Services
                 };
             }
             //check if artistId exists
-            if(await _artistRepository.GetAll().AnyAsync(a => a.Id == recordCreateRequestModel.ArtistId
-            == false)) 
+            if(await _artistRepository.GetAll().AnyAsync(a => a.Id == recordCreateRequestModel.ArtistId)
+            == false) 
             {
                 return new RecordResultModel
                 {
@@ -215,7 +215,7 @@ namespace Pri.CleanArchitecture.Music.Core.Services
         public async Task<RecordResultModel> UpdateRecordAsync(RecordUpdateRequestModel recordUpdateRequestModel)
         {
             //check if genreId exists
-            if (await _genreRepository.GetAll().AnyAsync(g => g.Id == recordUpdateRequestModel.GenreId == false))
+            if (await _genreRepository.GetAll().AnyAsync(g => g.Id == recordUpdateRequestModel.GenreId) == false)
             {
                 return new RecordResultModel
                 {
@@ -224,7 +224,7 @@ namespace Pri.CleanArchitecture.Music.Core.Services
                 };
             }
             //check if artistId exists
-            if (await _genreRepository.GetAll().AnyAsync(g => g.Id == recordUpdateRequestModel.ArtistId == false))
+            if (await _genreRepository.GetAll().AnyAsync(g => g.Id == recordUpdateRequestModel.ArtistId) == false)
             {
                 return new RecordResultModel
                 {

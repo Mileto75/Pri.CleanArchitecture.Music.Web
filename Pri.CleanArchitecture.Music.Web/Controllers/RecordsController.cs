@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Pri.CleanArchitecture.Music.Core.Interfaces.Services;
+using Pri.CleanArchitecture.Music.Core.Services.Models;
 using Pri.CleanArchitecture.Music.Web.ViewModels;
 
 namespace Pri.CleanArchitecture.Music.Web.Controllers
@@ -49,6 +50,41 @@ namespace Pri.CleanArchitecture.Music.Web.Controllers
                 return View(recordsDetailViewModel);
             }
             Response.StatusCode = 404;
+            return View("Error", result.Errors);
+        }
+        public async Task<IActionResult> Create()
+        {
+            var result = await _recordService.CreateRecordAsync
+                (
+                    new RecordCreateRequestModel 
+                    {
+                        Title = "Live in Brugge",
+                        ArtistId = 22,
+                        GenreId = 2,
+                        Price = 99.23M,
+                    }
+                );
+            if(result.IsSucces)
+            {
+                return RedirectToAction("Index");
+            }
+            return View("Error", result.Errors);
+        }
+        public async Task<IActionResult> Update(int id)
+        {
+            var updateRequestModel = new RecordUpdateRequestModel
+            {
+                Id = id,
+                Title = "Live in Lapscheure",
+                GenreId = 2,
+                ArtistId = 2,
+                Price = 23.33M
+            };
+            var result = await _recordService.UpdateRecordAsync(updateRequestModel);
+            if(result.IsSucces)
+            {
+                return RedirectToAction("Index");
+            }
             return View("Error", result.Errors);
         }
     }
