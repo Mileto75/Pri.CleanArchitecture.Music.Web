@@ -15,17 +15,19 @@ namespace Pri.CleanArchitecture.Music.Core.Services
     {
         private readonly IRecordRepository _recordRepository;
         private readonly IGenreRepository _genreRepository;
+        private readonly IArtistRepository _artistRepository;
 
-        public RecordService(IRecordRepository recordRepository, IGenreRepository genreRepository)
+        public RecordService(IRecordRepository recordRepository, IGenreRepository genreRepository, IArtistRepository artistRepository)
         {
             _recordRepository = recordRepository;
             _genreRepository = genreRepository;
+            _artistRepository = artistRepository;
         }
 
         public async Task<RecordResultModel> CreateRecordAsync(RecordCreateRequestModel recordCreateRequestModel)
         {
             //check if genreId exists
-            if(await _genreRepository.GetAll().AnyAsync(g => g.Id == recordCreateRequestModel.GenreId != true))
+            if(await _genreRepository.GetAll().AnyAsync(g => g.Id == recordCreateRequestModel.GenreId == false))
             {
                 return new RecordResultModel
                 {
@@ -34,7 +36,15 @@ namespace Pri.CleanArchitecture.Music.Core.Services
                 };
             }
             //check if artistId exists
-            
+            if(await _artistRepository.GetAll().AnyAsync(a => a.Id == recordCreateRequestModel.ArtistId
+            == false)) 
+            {
+                return new RecordResultModel
+                {
+                    IsSucces = false,
+                    Errors = new List<string> { "Artist does not exist!" }
+                };
+            }
             var record = new Record
             {
                 Title = recordCreateRequestModel.Title,

@@ -13,6 +13,7 @@ builder.Services.AddDbContext<ApplicationDbContext>
 // Add services to the container.
 builder.Services.AddScoped<IRecordRepository,RecordRepository>();
 builder.Services.AddScoped<IGenreRepository,GenreRepository>();
+builder.Services.AddScoped<IArtistRepository,ArtistRepository>();
 builder.Services.AddScoped<IRecordService,RecordService>();
 builder.Services.AddControllersWithViews();
 
