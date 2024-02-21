@@ -17,5 +17,7 @@ namespace Pri.CleanArchitecture.Music.Core.Interfaces.Services
         Task<RecordResultModel> SearchByArtistAsync(string name);
         Task<RecordResultModel> GetRecordsByGenreIdAsync(int genreId);
         Task<RecordResultModel> CreateRecordAsync(RecordCreateRequestModel recordCreateRequestModel);
+        Task<RecordResultModel> UpdateRecordAsync(RecordUpdateRequestModel recordUpdateRequestModel);
+        Task<RecordResultModel> DeleteRecordAsync(int id);
     }
 }

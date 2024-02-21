@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Pri.CleanArchitecture.Music.Core.Services.Models
 {
-    internal class RecordUpdateRequestModel : RecordCreateRequestModel
+    public class RecordUpdateRequestModel : RecordCreateRequestModel
     {
         public int Id { get; set; }
     }

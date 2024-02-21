@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace Pri.CleanArchitecture.Music.Core.Services
 {
@@ -70,6 +71,28 @@ namespace Pri.CleanArchitecture.Music.Core.Services
             };
         }
 
+        public async Task<RecordResultModel> DeleteRecordAsync(int id)
+        {
+            var record = await _recordRepository.GetByIdAsync(id);
+            if(record == null)
+            {
+                return new RecordResultModel
+                {
+                    IsSucces = false,
+                    Errors = new List<string> { "Record does not exist!" }
+                };
+            }
+            if(await _recordRepository.DeleteAsync(record))
+            {
+                return new RecordResultModel { IsSucces = true };
+            }
+            return new RecordResultModel
+            {
+                IsSucces = false,
+                Errors = new List<string> { "Some error occurred!" }
+            };
+        }
+
         public async Task<RecordResultModel> GetAllAsync()
         {
             //get the records from the RecordRepository
@@ -102,24 +125,141 @@ namespace Pri.CleanArchitecture.Music.Core.Services
             return recordresultModel;
         }
 
-        public Task<RecordResultModel> GetRecordsByGenreIdAsync(int genreId)
+        public async Task<RecordResultModel> GetRecordsByGenreIdAsync(int genreId)
         {
-            throw new NotImplementedException();
+            var records = await _recordRepository.GetRecordsByGenreIdAsync(genreId);
+            if(records.Count() > 0)
+            {
+                return new RecordResultModel
+                {
+                    Records = records,
+                    IsSucces = true
+                };
+            }
+            return new RecordResultModel
+            {
+                IsSucces = false,
+                Errors = new List<string> { "No records found" }
+            };
         }
 
-        public Task<RecordResultModel> SearchByArtistAsync(string name)
+        public async Task<RecordResultModel> SearchByArtistAsync(string name)
         {
-            throw new NotImplementedException();
+            var records = await _recordRepository.GetAll()
+                .Include(r => r.Artist)
+                .Include(r => r.Genre)
+                .Include(r => r.Properties)
+                .Where(r => r.Artist.Name.ToUpper().Contains(name.ToUpper()))
+                .ToListAsync();
+            if (records.Count() > 0)
+            {
+                return new RecordResultModel
+                {
+                    Records = records,
+                    IsSucces = true
+                };
+            }
+            return new RecordResultModel
+            {
+                IsSucces = false,
+                Errors = new List<string> { "No records found" }
+            };
         }
 
-        public Task<RecordResultModel> SearchByPropertyAsync(string name)
+        public async Task<RecordResultModel> SearchByPropertyAsync(string name)
         {
-            throw new NotImplementedException();
+            var records = await _recordRepository.GetAll()
+                .Include(r => r.Artist)
+                .Include(r => r.Genre)
+                .Include(r => r.Properties)
+                .Where(r => r.Properties.Any(p => p.Name.ToUpper().Contains(name.ToUpper())))
+                .ToListAsync();
+            if (records.Count() > 0)
+            {
+                return new RecordResultModel
+                {
+                    Records = records,
+                    IsSucces = true
+                };
+            }
+            return new RecordResultModel
+            {
+                IsSucces = false,
+                Errors = new List<string> { "No records found" }
+            };
         }
 
-        public Task<RecordResultModel> SearchByTitleAsync(string title)
+        public async Task<RecordResultModel> SearchByTitleAsync(string title)
         {
-            throw new NotImplementedException();
+            var records = await _recordRepository.GetAll()
+                .Include(r => r.Artist)
+                .Include(r => r.Genre)
+                .Include(r => r.Properties)
+                .Where(r => r.Title.ToUpper().Contains(title.ToUpper()))
+                .ToListAsync();
+            if (records.Count() > 0)
+            {
+                return new RecordResultModel
+                {
+                    Records = records,
+                    IsSucces = true
+                };
+            }
+            return new RecordResultModel
+            {
+                IsSucces = false,
+                Errors = new List<string> { "No records found" }
+            };
+        }
+
+        public async Task<RecordResultModel> UpdateRecordAsync(RecordUpdateRequestModel recordUpdateRequestModel)
+        {
+            //check if genreId exists
+            if (await _genreRepository.GetAll().AnyAsync(g => g.Id == recordUpdateRequestModel.GenreId == false))
+            {
+                return new RecordResultModel
+                {
+                    IsSucces = false,
+                    Errors = new List<string> { "Genre does not exist!" }
+                };
+            }
+            //check if artistId exists
+            if (await _genreRepository.GetAll().AnyAsync(g => g.Id == recordUpdateRequestModel.ArtistId == false))
+            {
+                return new RecordResultModel
+                {
+                    IsSucces = false,
+                    Errors = new List<string> { "Artist does not exist!" }
+                };
+            }
+            //check if record exists
+            var record = await _recordRepository.GetByIdAsync(recordUpdateRequestModel.Id);
+            if(record == null)
+            {
+                return new RecordResultModel
+                {
+                    IsSucces = false,
+                    Errors = new List<string> { "Record not found" }
+                };
+            }
+            //update
+            record.Title = recordUpdateRequestModel.Title;
+            record.GenreId = recordUpdateRequestModel.GenreId;
+            record.ArtistId = recordUpdateRequestModel.ArtistId;
+            record.Price = recordUpdateRequestModel.Price;
+            if(await  _recordRepository.UpdateAsync(record))
+            {
+                return new RecordResultModel
+                {
+                    IsSucces = true,
+                    Records = new List<Record> { record }
+                };
+            }
+            return new RecordResultModel
+            {
+                IsSucces = false,
+                Errors = new List<string> { "Record update failed!" }
+            };
         }
     }
 }
