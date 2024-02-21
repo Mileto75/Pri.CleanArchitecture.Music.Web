@@ -16,7 +16,7 @@ namespace Pri.CleanArchitecture.Music.Core.Interfaces.Repositories
         Task<bool> AddAsync(Record toRecord);
         Task<bool> UpdateAsync(Record toUpdate);
         Task<bool> DeleteAsync(Record toDelete);
-        Task<bool> GetRecordsByGenreIdAsync(int genreId);
-        Task<bool> GetRecordsByArtistIdAsync(int genreId);
+        Task<IEnumerable<Record>> GetRecordsByGenreIdAsync(int genreId);
+        Task<IEnumerable<Record>> GetRecordsByArtistIdAsync(int artistId);
     }
 }
