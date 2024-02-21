@@ -12,6 +12,7 @@ builder.Services.AddDbContext<ApplicationDbContext>
     .UseSqlServer(builder.Configuration.GetConnectionString("DefaultDb")));
 // Add services to the container.
 builder.Services.AddScoped<IRecordRepository,RecordRepository>();
+builder.Services.AddScoped<IGenreRepository,GenreRepository>();
 builder.Services.AddScoped<IRecordService,RecordService>();
 builder.Services.AddControllersWithViews();
 

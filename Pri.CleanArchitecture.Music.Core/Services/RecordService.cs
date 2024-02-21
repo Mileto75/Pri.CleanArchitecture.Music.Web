@@ -1,4 +1,5 @@
-﻿using Pri.CleanArchitecture.Music.Core.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Pri.CleanArchitecture.Music.Core.Entities;
 using Pri.CleanArchitecture.Music.Core.Interfaces.Repositories;
 using Pri.CleanArchitecture.Music.Core.Interfaces.Services;
 using Pri.CleanArchitecture.Music.Core.Services.Models;
@@ -13,15 +14,50 @@ namespace Pri.CleanArchitecture.Music.Core.Services
     public class RecordService : IRecordService
     {
         private readonly IRecordRepository _recordRepository;
+        private readonly IGenreRepository _genreRepository;
 
-        public RecordService(IRecordRepository recordRepository)
+        public RecordService(IRecordRepository recordRepository, IGenreRepository genreRepository)
         {
             _recordRepository = recordRepository;
+            _genreRepository = genreRepository;
         }
 
-        public Task<RecordResultModel> CreateRecordAsync(RecordCreateRequestModel recordCreateRequestModel)
+        public async Task<RecordResultModel> CreateRecordAsync(RecordCreateRequestModel recordCreateRequestModel)
         {
-            throw new NotImplementedException();
+            //check if genreId exists
+            if(await _genreRepository.GetAll().AnyAsync(g => g.Id == recordCreateRequestModel.GenreId != true))
+            {
+                return new RecordResultModel
+                {
+                    IsSucces = false,
+                    Errors = new List<string> { "Genre does not exist!" }
+                };
+            }
+            //check if artistId exists
+            
+            var record = new Record
+            {
+                Title = recordCreateRequestModel.Title,
+                GenreId = recordCreateRequestModel.GenreId,
+                ArtistId = recordCreateRequestModel.ArtistId,
+                Price = recordCreateRequestModel.Price,
+            };
+            //call the repo
+            var result = await _recordRepository.AddAsync(record);
+            //check  result
+            if(result)
+            {
+                return new RecordResultModel
+                {
+                    IsSucces = true,
+                    Records = new List<Record> { record },
+                };
+            }
+            return new RecordResultModel
+            {
+                IsSucces = false,
+                Errors = new List<string> { "Record not created!" }
+            };
         }
 
         public async Task<RecordResultModel> GetAllAsync()
