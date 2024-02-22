@@ -25,12 +25,12 @@ namespace Pri.CleanArchitecture.Music.Core.Services
             _artistRepository = artistRepository;
         }
 
-        public async Task<RecordResultModel> CreateRecordAsync(RecordCreateRequestModel recordCreateRequestModel)
+        public async Task<ResultModel<Record>> CreateRecordAsync(RecordCreateRequestModel recordCreateRequestModel)
         {
             //check if genreId exists
             if(await _genreRepository.GetAll().AnyAsync(g => g.Id == recordCreateRequestModel.GenreId) == false)
             {
-                return new RecordResultModel
+                return new ResultModel<Record>
                 {
                     IsSucces = false,
                     Errors = new List<string> { "Genre does not exist!" }
@@ -40,7 +40,7 @@ namespace Pri.CleanArchitecture.Music.Core.Services
             if(await _artistRepository.GetAll().AnyAsync(a => a.Id == recordCreateRequestModel.ArtistId)
             == false) 
             {
-                return new RecordResultModel
+                return new ResultModel<Record>
                 {
                     IsSucces = false,
                     Errors = new List<string> { "Artist does not exist!" }
@@ -58,25 +58,25 @@ namespace Pri.CleanArchitecture.Music.Core.Services
             //check  result
             if(result)
             {
-                return new RecordResultModel
+                return new ResultModel<Record>
                 {
                     IsSucces = true,
-                    Records = new List<Record> { record },
+                    Value =  record,
                 };
             }
-            return new RecordResultModel
+            return new ResultModel<Record>
             {
                 IsSucces = false,
                 Errors = new List<string> { "Record not created!" }
             };
         }
 
-        public async Task<RecordResultModel> DeleteRecordAsync(int id)
+        public async Task<ResultModel<Record>> DeleteRecordAsync(int id)
         {
             var record = await _recordRepository.GetByIdAsync(id);
             if(record == null)
             {
-                return new RecordResultModel
+                return new ResultModel<Record>
                 {
                     IsSucces = false,
                     Errors = new List<string> { "Record does not exist!" }
@@ -84,24 +84,24 @@ namespace Pri.CleanArchitecture.Music.Core.Services
             }
             if(await _recordRepository.DeleteAsync(record))
             {
-                return new RecordResultModel { IsSucces = true };
+                return new ResultModel<Record> { IsSucces = true };
             }
-            return new RecordResultModel
+            return new ResultModel<Record>
             {
                 IsSucces = false,
                 Errors = new List<string> { "Some error occurred!" }
             };
         }
 
-        public async Task<RecordResultModel> GetAllAsync()
+        public async Task<ResultModel<IEnumerable<Record>>> GetAllAsync()
         {
             //get the records from the RecordRepository
             var records = await _recordRepository.GetAllAsync();
             //check if count > 0
-            var recordResultModel = new RecordResultModel();
+            var recordResultModel = new ResultModel<IEnumerable<Record>>();
             if (records.Count() > 0) 
             {
-                recordResultModel.Records = records;
+                recordResultModel.Value = records;
                 recordResultModel.IsSucces = true;
                 return recordResultModel;
             }
@@ -109,41 +109,41 @@ namespace Pri.CleanArchitecture.Music.Core.Services
             return recordResultModel;
         }
 
-        public async Task<RecordResultModel> GetByIdAsync(int id)
+        public async Task<ResultModel<Record>> GetByIdAsync(int id)
         {
             //get the record
             var record = await _recordRepository.GetByIdAsync(id);
-            var recordresultModel = new RecordResultModel();
+            var recordresultModel = new ResultModel<Record>();
             //check if exists
             if(record == null)
             {
                 recordresultModel.Errors = new List<string> { "Record not found!" };
                 return recordresultModel;
             }
-            recordresultModel.Records = new List<Record> { record };
+            recordresultModel.Value =  record ;
             recordresultModel.IsSucces = true;
             return recordresultModel;
         }
 
-        public async Task<RecordResultModel> GetRecordsByGenreIdAsync(int genreId)
+        public async Task<ResultModel<IEnumerable<Record>>> GetRecordsByGenreIdAsync(int genreId)
         {
             var records = await _recordRepository.GetRecordsByGenreIdAsync(genreId);
             if(records.Count() > 0)
             {
-                return new RecordResultModel
+                return new ResultModel<IEnumerable<Record>>
                 {
-                    Records = records,
+                    Value = records,
                     IsSucces = true
                 };
             }
-            return new RecordResultModel
+            return new ResultModel<IEnumerable<Record>>
             {
                 IsSucces = false,
                 Errors = new List<string> { "No records found" }
             };
         }
 
-        public async Task<RecordResultModel> SearchByArtistAsync(string name)
+        public async Task<ResultModel<IEnumerable<Record>>> SearchByArtistAsync(string name)
         {
             var records = await _recordRepository.GetAll()
                 .Include(r => r.Artist)
@@ -153,20 +153,20 @@ namespace Pri.CleanArchitecture.Music.Core.Services
                 .ToListAsync();
             if (records.Count() > 0)
             {
-                return new RecordResultModel
+                return new ResultModel<IEnumerable<Record>>
                 {
-                    Records = records,
+                    Value = records,
                     IsSucces = true
                 };
             }
-            return new RecordResultModel
+            return new ResultModel<IEnumerable<Record>>
             {
                 IsSucces = false,
                 Errors = new List<string> { "No records found" }
             };
         }
 
-        public async Task<RecordResultModel> SearchByPropertyAsync(string name)
+        public async Task<ResultModel<IEnumerable<Record>>> SearchByPropertyAsync(string name)
         {
             var records = await _recordRepository.GetAll()
                 .Include(r => r.Artist)
@@ -176,20 +176,20 @@ namespace Pri.CleanArchitecture.Music.Core.Services
                 .ToListAsync();
             if (records.Count() > 0)
             {
-                return new RecordResultModel
+                return new ResultModel<IEnumerable<Record>>
                 {
-                    Records = records,
+                    Value = records,
                     IsSucces = true
                 };
             }
-            return new RecordResultModel
+            return new ResultModel<IEnumerable<Record>>
             {
                 IsSucces = false,
                 Errors = new List<string> { "No records found" }
             };
         }
 
-        public async Task<RecordResultModel> SearchByTitleAsync(string title)
+        public async Task<ResultModel<IEnumerable<Record>>> SearchByTitleAsync(string title)
         {
             var records = await _recordRepository.GetAll()
                 .Include(r => r.Artist)
@@ -199,25 +199,25 @@ namespace Pri.CleanArchitecture.Music.Core.Services
                 .ToListAsync();
             if (records.Count() > 0)
             {
-                return new RecordResultModel
+                return new ResultModel<IEnumerable<Record>>
                 {
-                    Records = records,
+                    Value = records,
                     IsSucces = true
                 };
             }
-            return new RecordResultModel
+            return new ResultModel<IEnumerable<Record>>
             {
                 IsSucces = false,
                 Errors = new List<string> { "No records found" }
             };
         }
 
-        public async Task<RecordResultModel> UpdateRecordAsync(RecordUpdateRequestModel recordUpdateRequestModel)
+        public async Task<ResultModel<Record>> UpdateRecordAsync(RecordUpdateRequestModel recordUpdateRequestModel)
         {
             //check if genreId exists
             if (await _genreRepository.GetAll().AnyAsync(g => g.Id == recordUpdateRequestModel.GenreId) == false)
             {
-                return new RecordResultModel
+                return new ResultModel<Record>
                 {
                     IsSucces = false,
                     Errors = new List<string> { "Genre does not exist!" }
@@ -226,7 +226,7 @@ namespace Pri.CleanArchitecture.Music.Core.Services
             //check if artistId exists
             if (await _genreRepository.GetAll().AnyAsync(g => g.Id == recordUpdateRequestModel.ArtistId) == false)
             {
-                return new RecordResultModel
+                return new ResultModel<Record>
                 {
                     IsSucces = false,
                     Errors = new List<string> { "Artist does not exist!" }
@@ -236,7 +236,7 @@ namespace Pri.CleanArchitecture.Music.Core.Services
             var record = await _recordRepository.GetByIdAsync(recordUpdateRequestModel.Id);
             if(record == null)
             {
-                return new RecordResultModel
+                return new ResultModel<Record>
                 {
                     IsSucces = false,
                     Errors = new List<string> { "Record not found" }
@@ -249,13 +249,13 @@ namespace Pri.CleanArchitecture.Music.Core.Services
             record.Price = recordUpdateRequestModel.Price;
             if(await  _recordRepository.UpdateAsync(record))
             {
-                return new RecordResultModel
+                return new ResultModel<Record>
                 {
                     IsSucces = true,
-                    Records = new List<Record> { record }
+                    Value = record,
                 };
             }
-            return new RecordResultModel
+            return new ResultModel<Record>
             {
                 IsSucces = false,
                 Errors = new List<string> { "Record update failed!" }

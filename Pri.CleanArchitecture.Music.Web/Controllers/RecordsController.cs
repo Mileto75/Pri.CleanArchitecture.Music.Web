@@ -22,7 +22,7 @@ namespace Pri.CleanArchitecture.Music.Web.Controllers
                 //set the viewmodel
                 var recordsIndexViewModel = new RecordsIndexViewModel
                 {
-                    Records = result.Records.Select(r =>
+                    Records = result.Value.Select(r =>
                     new RecordsDetailViewModel
                     {
                         Id = r.Id,
@@ -42,10 +42,10 @@ namespace Pri.CleanArchitecture.Music.Web.Controllers
             {
                 var recordsDetailViewModel = new RecordsDetailViewModel
                 {
-                    Id = result.Records.First().Id,
-                    Title = result.Records.First().Title,
-                    Artist = result.Records.First().Artist.Name,
-                    Genre = result.Records.First().Genre.Name,
+                    Id = result.Value.Id,
+                    Title = result.Value.Title,
+                    Artist = result.Value.Artist.Name,
+                    Genre = result.Value.Genre.Name,
                 };
                 return View(recordsDetailViewModel);
             }

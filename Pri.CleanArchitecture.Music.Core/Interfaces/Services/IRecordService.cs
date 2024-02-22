@@ -10,14 +10,14 @@ namespace Pri.CleanArchitecture.Music.Core.Interfaces.Services
 {
     public interface IRecordService
     {
-        Task<RecordResultModel> GetAllAsync();
-        Task<RecordResultModel> GetByIdAsync(int id);
-        Task<RecordResultModel> SearchByTitleAsync(string title);
-        Task<RecordResultModel> SearchByPropertyAsync(string name);
-        Task<RecordResultModel> SearchByArtistAsync(string name);
-        Task<RecordResultModel> GetRecordsByGenreIdAsync(int genreId);
-        Task<RecordResultModel> CreateRecordAsync(RecordCreateRequestModel recordCreateRequestModel);
-        Task<RecordResultModel> UpdateRecordAsync(RecordUpdateRequestModel recordUpdateRequestModel);
-        Task<RecordResultModel> DeleteRecordAsync(int id);
+        Task<ResultModel<IEnumerable<Record>>> GetAllAsync();
+        Task<ResultModel<Record>> GetByIdAsync(int id);
+        Task<ResultModel<IEnumerable<Record>>> SearchByTitleAsync(string title);
+        Task<ResultModel<IEnumerable<Record>>> SearchByPropertyAsync(string name);
+        Task<ResultModel<IEnumerable<Record>>> SearchByArtistAsync(string name);
+        Task<ResultModel<IEnumerable<Record>>> GetRecordsByGenreIdAsync(int genreId);
+        Task<ResultModel<Record>> CreateRecordAsync(RecordCreateRequestModel recordCreateRequestModel);
+        Task<ResultModel<Record>> UpdateRecordAsync(RecordUpdateRequestModel recordUpdateRequestModel);
+        Task<ResultModel<Record>> DeleteRecordAsync(int id);
     }
 }
