@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Pri.CleanArchitecture.Music.Infrastructure.Repositories
 {
-    public class ArtistRepository : BaseRepository<Artist>, IArtistRepository
+    public class ArtistRepository : BaseRepository<Artist>
     {
         public ArtistRepository(ApplicationDbContext applicationDbContext, ILogger<IBaseRepository<Artist>> logger) 
             : base(applicationDbContext, logger)

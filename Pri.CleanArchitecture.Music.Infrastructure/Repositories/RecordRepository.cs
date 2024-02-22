@@ -20,27 +20,41 @@ namespace Pri.CleanArchitecture.Music.Infrastructure.Repositories
 
         public override IQueryable<Record> GetAll()
         {
-            return base.GetAll();
+            return _table
+                .Include(r => r.Artist)
+                .Include(r => r.Genre)
+                .Include(r => r.Properties)
+                .AsQueryable();
         }
 
-        public override Task<IEnumerable<Record>> GetAllAsync()
+        public async override Task<IEnumerable<Record>> GetAllAsync()
         {
-            return base.GetAllAsync();
+            return await _table.Include(r => r.Artist)
+                .Include(r => r.Genre)
+                .Include(r => r.Properties)
+                .ToListAsync();
+
+
         }
 
-        public override Task<Record> GetByIdAsync(int id)
+        public async override Task<Record> GetByIdAsync(int id)
         {
-            return base.GetByIdAsync(id);
+            return await _table.Include(r => r.Artist)
+                .Include(r => r.Genre)
+                .Include(r => r.Properties)
+                .FirstOrDefaultAsync(r => r.Id == id);
         }
 
-        public Task<IEnumerable<Record>> GetRecordsByArtistIdAsync(int artistId)
+        public async Task<IEnumerable<Record>> GetRecordsByArtistIdAsync(int artistId)
         {
-            throw new NotImplementedException();
+            return await GetAll().Where(r => r.ArtistId == artistId)
+                .ToListAsync();
         }
 
-        public Task<IEnumerable<Record>> GetRecordsByGenreIdAsync(int genreId)
+        public async Task<IEnumerable<Record>> GetRecordsByGenreIdAsync(int genreId)
         {
-            throw new NotImplementedException();
+            return await GetAll().Where(r => r.GenreId == genreId )
+                .ToListAsync();
         }
     }
 }

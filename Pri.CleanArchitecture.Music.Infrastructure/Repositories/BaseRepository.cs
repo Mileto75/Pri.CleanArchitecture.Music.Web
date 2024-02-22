@@ -15,7 +15,7 @@ namespace Pri.CleanArchitecture.Music.Infrastructure.Repositories
     {
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly ILogger<IBaseRepository<T>> _logger;
-        private readonly DbSet<T> _table;
+        protected readonly DbSet<T> _table;
 
         public BaseRepository(ApplicationDbContext applicationDbContext, ILogger<IBaseRepository<T>> logger)
         {
