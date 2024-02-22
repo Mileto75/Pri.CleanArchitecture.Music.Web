@@ -15,16 +15,51 @@ namespace Pri.CleanArchitecture.Music.Infrastructure.Repositories
     {
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly ILogger<IBaseRepository<T>> _logger;
+        private readonly DbSet<T> _table;
 
         public BaseRepository(ApplicationDbContext applicationDbContext, ILogger<IBaseRepository<T>> logger)
         {
             _applicationDbContext = applicationDbContext;
+            _table = _applicationDbContext.Set<T>();
             _logger = logger;
         }
 
         public async Task<bool> AddAsync(T toAdd)
         {
-            _applicationDbContext.Set<T>().Add(toAdd);
+            _table.Add(toAdd);
+            return await SaveChangesAsync();
+        }
+
+        public async Task<bool> DeleteAsync(T toDelete)
+        {
+            _table.Remove(toDelete);
+            return await SaveChangesAsync();
+        }
+
+        public virtual IQueryable<T> GetAll()
+        {
+            return _table.AsQueryable();
+        }
+
+        public virtual async Task<IEnumerable<T>> GetAllAsync()
+        {
+            return await _table
+                .ToListAsync();
+        }
+
+        public virtual Task<T> GetByIdAsync(int id)
+        {
+            return _table
+                .FirstOrDefaultAsync(t => t.Id == id);
+        }
+
+        public async Task<bool> UpdateAsync(T toUpdate)
+        {
+            _table.Update(toUpdate);
+            return await SaveChangesAsync();
+        }
+        private async Task<bool> SaveChangesAsync()
+        {
             try
             {
                 await _applicationDbContext.SaveChangesAsync();
@@ -35,36 +70,6 @@ namespace Pri.CleanArchitecture.Music.Infrastructure.Repositories
                 _logger.LogError(dbUpdateException.Message);
                 return false;
             }
-        }
-
-        public Task<bool> DeleteAsync(T toDelete)
-        {
-            throw new NotImplementedException();
-        }
-
-        public virtual IQueryable<T> GetAll()
-        {
-            return _applicationDbContext
-                .Set<T>().AsQueryable();
-        }
-
-        public virtual async Task<IEnumerable<T>> GetAllAsync()
-        {
-            return await _applicationDbContext
-                .Set<T>()
-                .ToListAsync();
-        }
-
-        public virtual Task<T> GetByIdAsync(int id)
-        {
-            return _applicationDbContext
-                .Set<T>()
-                .FirstOrDefaultAsync(t => t.Id == id);
-        }
-
-        public Task<bool> UpdateAsync(T toUpdate)
-        {
-            throw new NotImplementedException();
         }
     }
 }
