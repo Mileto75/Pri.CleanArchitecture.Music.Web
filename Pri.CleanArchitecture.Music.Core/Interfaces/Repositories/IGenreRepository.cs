@@ -7,14 +7,8 @@ using System.Threading.Tasks;
 
 namespace Pri.CleanArchitecture.Music.Core.Interfaces.Repositories
 {
-    public interface IGenreRepository
+    public interface IGenreRepository : IBaseRepository<Genre>
     {
-        //CRUD
-        Task<IEnumerable<Genre>> GetAllAsync();
-        Task<Genre> GetByIdAsync(int id);
-        IQueryable<Genre> GetAll();
-        Task<bool> AddAsync(Genre newGenre);
-        Task<bool> UpdateAsync(Genre toUpdate);
-        Task<bool> DeleteAsync(Genre toDelete);
+        
     }
 }
