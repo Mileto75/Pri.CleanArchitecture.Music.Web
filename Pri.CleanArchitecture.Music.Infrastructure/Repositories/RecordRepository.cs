@@ -11,92 +11,36 @@ using System.Threading.Tasks;
 
 namespace Pri.CleanArchitecture.Music.Infrastructure.Repositories
 {
-    public class RecordRepository : IRecordRepository
+    public class RecordRepository : BaseRepository<Record>, IRecordRepository
     {
-        private readonly ApplicationDbContext _applicationDbContext;
-        private readonly ILogger<RecordRepository> _logger;
-
-        public RecordRepository(ApplicationDbContext applicationDbContext, ILogger<RecordRepository> logger = null)
+        public RecordRepository(ApplicationDbContext applicationDbContext, ILogger<IBaseRepository<Record>> logger) 
+            : base(applicationDbContext, logger)
         {
-            _applicationDbContext = applicationDbContext;
-            _logger = logger;
         }
 
-        public async Task<bool> AddAsync(Record toRecord)
+        public override IQueryable<Record> GetAll()
         {
-            _applicationDbContext.Records.Add(toRecord);
-            return await SaveChangesAsync();
+            return base.GetAll();
         }
 
-        public async Task<bool> DeleteAsync(Record toDelete)
+        public override Task<IEnumerable<Record>> GetAllAsync()
         {
-            _applicationDbContext.Records.Remove(toDelete);
-            return await SaveChangesAsync();
+            return base.GetAllAsync();
         }
 
-        public IQueryable<Record> GetAll()
+        public override Task<Record> GetByIdAsync(int id)
         {
-            return _applicationDbContext
-                .Records.AsQueryable();
+            return base.GetByIdAsync(id);
         }
 
-        public async Task<IEnumerable<Record>> GetAllAsync()
+        public Task<IEnumerable<Record>> GetRecordsByArtistIdAsync(int artistId)
         {
-            return await _applicationDbContext.Records
-                .Include(r => r.Genre)
-                .Include(r => r.Properties)
-                .Include(r => r.Artist)
-                .ToListAsync();
+            throw new NotImplementedException();
         }
 
-        public async Task<Record> GetByIdAsync(int id)
+        public Task<IEnumerable<Record>> GetRecordsByGenreIdAsync(int genreId)
         {
-            return await _applicationDbContext.Records
-                .Include(r => r.Genre)
-                .Include(r => r.Properties)
-                .Include(r => r.Artist)
-                .FirstOrDefaultAsync(r => r.Id == id);
-        }
-
-        public async Task<IEnumerable<Record>> GetRecordsByArtistIdAsync(int artistId)
-        {
-            return await _applicationDbContext
-                .Records
-                .Include(r => r.Genre)
-                .Include(r => r.Properties)
-                .Include(r => r.Artist)
-                .Where(r => r.ArtistId == artistId)
-                .ToListAsync();
-        }
-
-        public async Task<IEnumerable<Record>> GetRecordsByGenreIdAsync(int genreId)
-        {
-            return await _applicationDbContext
-                .Records
-                .Include(r => r.Genre)
-                .Include(r => r.Properties)
-                .Include(r => r.Artist)
-                .Where(r => r.GenreId == genreId)
-                .ToListAsync();
-        }
-
-        public async Task<bool> UpdateAsync(Record toUpdate)
-        {
-            _applicationDbContext.Records.Update(toUpdate);
-            return await SaveChangesAsync();
-        }
-        private async Task<bool> SaveChangesAsync()
-        {
-            try
-            {
-                await _applicationDbContext.SaveChangesAsync();
-                return true;
-            }
-            catch (DbUpdateException dbUpdateException)
-            {
-                _logger.LogError(dbUpdateException.Message);
-                return false;
-            }
+            throw new NotImplementedException();
         }
     }
 }
